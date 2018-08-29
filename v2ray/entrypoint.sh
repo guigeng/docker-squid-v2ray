@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+sed -i "s/V2RAY_SERVER_IP/${V2RAY_SERVER_IP}/" ${V2RAY_CONFIG_FILE}
+sed -i "s/V2RAY_SERVER_PORT/${V2RAY_SERVER_PORT}/" ${V2RAY_CONFIG_FILE}
+sed -i "s/V2RAY_USERID/${V2RAY_USERID}/" ${V2RAY_CONFIG_FILE}
+exec /usr/bin/v2ray/v2ray -config ${V2RAY_CONFIG_FILE}

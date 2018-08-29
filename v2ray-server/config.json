@@ -1,0 +1,71 @@
+{
+    "stats": {},
+    "api": {
+        "services": [
+            "StatsService",
+            "HandlerService",
+            "LoggerService"
+        ],
+        "tag": "api"
+    },
+    "policy": {
+        "levels": {
+            "1": {
+                "connIdle": 300,
+                "downlinkOnly": 30,
+                "handshake": 4,
+                "uplinkOnly": 5,
+                "statsUserDownlink": true,
+                "statsUserUplink": true
+            }
+        }
+    },
+  "inbound": {
+    "port": LISTEN_PORT,
+    "protocol": "vmess",
+    "settings": {
+      "clients": [
+        {
+          "id": "f56a8f9a-8002-4cfa-a6cf-7117eca6a5d8",
+          "level":1,
+          "alterId":64,
+          "email":"nd@walsin.com"
+        }
+      ],
+      "default":{
+        "level":1,
+        "alterId":64
+      }
+    }
+  },
+  "inboundDetour": [
+    {
+        "listen": "127.0.0.1",
+        "port": 10085,
+        "protocol": "dokodemo-door",
+        "settings": {
+            "address": "127.0.0.1"
+        },
+        "tag": "api"
+    }
+  ],
+
+  "outbound": {
+    "protocol": "freedom",
+    "settings": {}
+  },
+  "routing": {
+        "settings": {
+            "rules": [
+                {
+                    "inboundTag": [
+                        "api"
+                    ],
+                    "outboundTag": "api",
+                    "type": "field"
+                }
+            ]
+        },
+        "strategy": "rules"
+    }
+}

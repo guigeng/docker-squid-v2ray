@@ -1,0 +1,80 @@
+{
+  "log" : {
+    "access": "/var/log/v2ray/access.log",
+    "error": "/var/log/v2ray/error.log",
+    "loglevel": "debug"
+  },
+  "inbound": {
+    "port": 1080,
+    "listen": "0.0.0.0",
+    "protocol": "http",
+    "settings": {
+      "timeout":0,
+          "allowTransparent":false,
+          "userLevel":0
+    },
+    "streamSettings": null
+  },
+  "outbound": {
+    "protocol": "vmess",
+    "settings": {
+      "vnext": [
+        {
+          "address": "V2RAY_SERVER_IP",
+          "port": V2RAY_SERVER_PORT,
+          "users": [
+            {
+              "id": "V2RAY_USERID",
+              "alterId": 64,
+              "security":"aes-128-gcm"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "outboundDetour": [
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct" 
+    }
+  ],
+  "routing": {
+    "strategy": "rules",
+    "settings": {
+      "domainStrategy": "IPIfNonMatch",
+      "rules": [
+        {
+          "type": "chinasites",
+          "outboundTag": "direct"
+        },
+        {
+          "type": "chinaip",
+          "outboundTag": "direct"
+        },
+                {
+          "type":"field",
+          "ip":[
+          "0.0.0.0/8",
+          "10.0.0.0/8",
+          "100.64.0.0/10",
+          "127.0.0.0/8",
+          "169.254.0.0/16",
+          "172.16.0.0/12",
+          "192.0.0.0/24",
+          "192.0.2.0/24",
+          "192.168.0.0/16",
+          "198.18.0.0/15",
+          "198.51.100.0/24",
+          "203.0.113.0/24",
+          "::1/128",
+          "fc00::/7",
+          "fe80::/10"
+          ],
+          "outboundTag":"direct"
+        }
+      ]
+    }
+  }
+}
