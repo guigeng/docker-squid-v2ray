@@ -1,6 +1,5 @@
 #!/bin/sh
 set -e
-sed -i "s/^workers.*$/workers $(nproc --all)/g" ${SQUID_CONFIG_FILE}
 
 echo "
 cache_peer ${PEER_SERVER} parent ${PEER_PORT} 0 no-digest proxy-only
@@ -11,4 +10,4 @@ always_direct allow chinaip
 never_direct allow all
 " > /etc/squid/peer.conf
 
-exec /usr/sbin/squid -f ${SQUID_CONFIG_FILE} --foreground -sYC
+exec /usr/sbin/squid -f ${SQUID_CONFIG_FILE} --foreground -NYCd 1

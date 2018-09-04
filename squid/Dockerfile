@@ -77,6 +77,9 @@ COPY --from=build /usr/lib/squid/ /usr/lib/squid/
 COPY --from=build /usr/share/squid/ /usr/share/squid/
 COPY --from=build /usr/sbin/squid /usr/sbin/squid
 COPY entrypoint.sh /sbin/
+
+RUN rm -rf /etc/squid/squid.conf
+
 COPY squid.conf /etc/squid/
 COPY acl.conf /etc/squid/
 COPY peer.conf /etc/squid/
@@ -91,10 +94,9 @@ RUN install -d -o squid -g squid \
     && chown -R squid:squid /etc/squid \
     && echo 'logfile_rotate 0' >> "$SQUID_CONFIG_FILE" \
     && echo 'cache_store_log none' >> "$SQUID_CONFIG_FILE" \
-         && apk add --no-cache --virtual .tz alpine-conf tzdata \
-	&& echo 'workers 1' >> "$SQUID_CONFIG_FILE" \
-	&& /sbin/setup-timezone -z $TZ \
-	&& apk del .tz 	
+    && apk add --no-cache --virtual .tz alpine-conf tzdata \
+    && /sbin/setup-timezone -z $TZ \
+    && apk del .tz 	
 	
 	
 VOLUME /var/log/squid
