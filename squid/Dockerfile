@@ -77,13 +77,11 @@ COPY --from=build /usr/lib/squid/ /usr/lib/squid/
 COPY --from=build /usr/share/squid/ /usr/share/squid/
 COPY --from=build /usr/sbin/squid /usr/sbin/squid
 COPY entrypoint.sh /sbin/
-
-RUN rm -rf /etc/squid/squid.conf
-
 COPY squid.conf /etc/squid/
 COPY acl.conf /etc/squid/
 COPY peer.conf /etc/squid/
 COPY cnip.txt /etc/squid/		
+COPY reload /sbin/
 
 RUN install -d -o squid -g squid \
 		/var/cache/squid \
@@ -91,6 +89,7 @@ RUN install -d -o squid -g squid \
 		/var/run/squid \
     && chmod +x /usr/lib/squid/* \
     && chmod +x /sbin/entrypoint.sh \
+    && chmod +x /sbin/reload \
     && chown -R squid:squid /etc/squid \
     && echo 'logfile_rotate 0' >> "$SQUID_CONFIG_FILE" \
     && echo 'cache_store_log none' >> "$SQUID_CONFIG_FILE" \
