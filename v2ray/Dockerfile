@@ -26,7 +26,12 @@ ENV PATH="/usr/bin/v2ray:$PATH" \
     V2RAY_SERVER_IP=1.1.1.1 \
     V2RAY_SERVER_PORT=1080 \
     V2RAY_USERID=1 \
-    V2RAY_CONFIG_FILE="/etc/v2ray/config.json"
+    V2RAY_CONFIG_FILE="/etc/v2ray/config.json" \
+    TZ="Asia/Shanghai" 
+	
+RUN apk add --no-cache --virtual .tz alpine-conf tzdata \
+    && /sbin/setup-timezone -z $TZ \
+    && apk del .tz 	
 
 EXPOSE 1080/tcp
 
