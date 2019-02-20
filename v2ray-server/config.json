@@ -21,7 +21,7 @@
         }
     },
   "inbound": {
-    "port": LISTEN_PORT,
+    "port": 1080,
     "protocol": "vmess",
     "settings": {
       "clients": [

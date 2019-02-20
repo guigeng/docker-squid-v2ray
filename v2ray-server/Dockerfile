@@ -23,8 +23,8 @@ RUN set -ex \
 	&& chmod +x /usr/bin/v2ray/entrypoint.sh
 
 ENV PATH="/usr/bin/v2ray:$PATH" \
-    LISTEN_PORT=10001 \
-	V2RAY_CONFIG_FILE="/etc/v2ray/config.json"
+    V2RAY_CONFIG_FILE="/etc/v2ray/config.json"
+EXPOSE 1080/tcp
 
 VOLUME /etc/v2ray
 
