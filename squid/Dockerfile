@@ -1,11 +1,13 @@
-FROM alpine:3.8 as build
+FROM alpine:3.10.1 as build
+
+ENV SQUID_VER 4.8
 
 RUN set -x \
         && apk add --no-cache gcc g++ libc-dev curl gnupg libressl-dev perl-dev autoconf automake make pkgconfig heimdal-dev libtool libcap-dev linux-headers \
         && mkdir -p /tmp/build \
         && cd /tmp/build \
-        && curl -SsL http://www.squid-cache.org/Versions/v4//squid-4.4.tar.gz -o squid-4.4.tar.gz \
-        && tar --strip 1 -xzf squid-4.4.tar.gz \
+        && curl -SsL http://www.squid-cache.org/Versions/v4//squid-${SQUID_VER}.tar.gz -o squid-${SQUID_VER}.tar.gz \
+        && tar --strip 1 -xzf squid-${SQUID_VER}.tar.gz \
         && \
         CFLAGS="-g0 -O2" \
         CXXFLAGS="-g0 -O2" \
@@ -60,17 +62,17 @@ RUN set -x \
         && make -j $(grep -cs ^processor /proc/cpuinfo) \
         && make install
 
-FROM alpine:3.8
+FROM alpine:3.10.1
 
-ENV SQUID_CONFIG_FILE="/etc/squid/squid.conf" \
-    TZ="Asia/Shanghai" \
-        PEER_SERVER=PEER_SERVER \
-        PEER_PORT=1080 
+ENV SQUID_CONFIG_FILE="/etc/squid/squid.conf" 
+ENV TZ="Asia/Shanghai" 
+ENV PEER_SERVER=PEER_SERVER 
+ENV PEER_PORT=1080 
 
-RUN set -x \
-    && deluser squid 2>/dev/null; delgroup squid 2>/dev/null; \
-        addgroup -S squid -g 3128 && adduser -S -u 3128 -G squid -g squid -H -D -s /bin/false -h /var/cache/squid squid \
-        && apk add --no-cache libstdc++ heimdal-libs libcap libressl2.7-libcrypto libressl2.7-libssl libltdl 
+RUN set -x && \
+    deluser squid 2>/dev/null; delgroup squid 2>/dev/null; \
+        addgroup -S squid -g 3128 && adduser -S -u 3128 -G squid -g squid -H -D -s /bin/false -h /var/cache/squid squid 
+RUN apk add --no-cache libstdc++ heimdal-libs libcap libressl2.7-libcrypto libressl2.7-libssl libltdl 
 
 COPY --from=build /etc/squid/ /etc/squid/
 COPY --from=build /usr/lib/squid/ /usr/lib/squid/
